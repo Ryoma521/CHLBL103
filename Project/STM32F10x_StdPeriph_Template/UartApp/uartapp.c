@@ -231,11 +231,10 @@ void uartDataProcess(void)
 
 void PubRxDataProcess(void)
 { 
+  uint16_t length=pub_rx.Buf[0][6]; 
+  length=(length<<8)+pub_rx.Buf[0][7];   
   
-  uint16_t length=pub_rx.Buf[0][7]; 
-  length=(length<<8)+pub_rx.Buf[0][6];   
-  
-  if(length>0x0000&&length<=0x00F9)
+  if(length>0x0003&&length<=0x00F9)
   {
     pub_rx.Buf[0][0]=((length+6-2)>>8);
     pub_rx.Buf[0][1]=(length+6-2);
@@ -265,7 +264,13 @@ void PubRxDataProcess(void)
       //vRadio_StartTx_Variable_Packet(0u,uartRxDataBuff,uDataLen+2);
       break;
     case 0xD3:
-      vRadio_StartTx_Variable_Packet(0u,pub_rx.Buf[0],length+6);
+      if (!ProtocolSimpleTransfer((unsigned char*)&(pub_rx.Buf[0][0]), length+6))
+      {
+        // Put the microcontroller into a low power state (sleep). Remain here
+        // until the ISR wakes up the processor.
+        //McuSleep();
+      }
+      //vRadio_StartTx_Variable_Packet(0u,pub_rx.Buf[0],length+6);
       break;
     default:
       break;
@@ -279,6 +284,8 @@ void PubTxDataProcess(void)
   {
     uint16_t length=pub_tx.Buf[0][2]; 
     length=(length<<8)+pub_tx.Buf[0][1]; 
+    length=0;
+    length=pub_tx.Buf[0][0];
     if(length<UartFrameMaxLen)
     {
       PubTx2DmaTxBuf(length);

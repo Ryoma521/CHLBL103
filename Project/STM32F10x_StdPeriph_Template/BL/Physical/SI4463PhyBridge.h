@@ -1,5 +1,5 @@
-#ifndef A110X2500_PHY_BRIDGE_H
-#define A110X2500_PHY_BRIDGE_H
+#ifndef SI4463_PHY_BRIDGE_H
+#define SI4463_PHY_BRIDGE_H
 /**
  *  ----------------------------------------------------------------------------
  *  Copyright (c) 2012-13, Anaren Microwave, Inc.
@@ -36,7 +36,7 @@
  *  ver 1.0.00 : 24 Jul 2012 
  *  - initial release
  */
-#define A110X2500_PHY_BRIDGE_INFO  "A110X2500_PHY_BRIDGE 1.0.01"
+#define SI4463_PHY_BRIDGE_INFO  "SI_PHY_BRIDGE 1.0.01"
    
 #include "PhyBridge.h" 
 
@@ -51,7 +51,7 @@
 #elif defined( A2500R24_MODULE )
 #include "A2500R24.h"
 #else
-#error "A110x2500 Physical Error 0100: RF module selected is not supported"
+//#error "A110x2500 Physical Error 0100: RF module selected is not supported"
 #endif
 
 // -----------------------------------------------------------------------------

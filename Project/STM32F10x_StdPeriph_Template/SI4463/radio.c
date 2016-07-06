@@ -525,7 +525,12 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
   
   //si446x_fifo_info(0u);
   
-  if(length<=0x0040)
+  U8 LenBuf[2];
+  LenBuf[0]=(U8)(length>>8);
+  LenBuf[1]=(U8)length;
+  si446x_write_tx_fifo(2, LenBuf);
+  
+  if(length<=0x003E)
   {
     /* Fill the TX fifo with datas */
     si446x_write_tx_fifo(length, pioRadioPacket);
@@ -533,7 +538,7 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
     si446x_fifo_info(0u);
     
     /* Start sending packet, channel 0, START immediately */
-    si446x_start_tx(channel, 0x30, length); 
+    si446x_start_tx(channel, 0x30, length+2); 
    
     PKT_Sent_Flag = 1;    
     rf_state =RF_TX;
@@ -549,14 +554,14 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
     
     //si446x_fifo_info(0u);
     /* Fill the TX fifo with datas */
-    si446x_write_tx_fifo(0x40, pioRadioPacket);        
-    wFIFOcount+=0x40;
+    si446x_write_tx_fifo(0x3E, pioRadioPacket);        
+    wFIFOcount+=0x3E;
     
     PKT_Sent_Flag = 1;
     rf_state =RF_TX;   
     
     /* Start sending packet, channel 0, START immediately */
-    si446x_start_tx(channel, 0x30, length);
+    si446x_start_tx(channel, 0x30, length+2);
   }
   }   
 }
@@ -621,7 +626,8 @@ void Raido_IRQHandler(void)
           RadioGotoRdySta();         
           LedD4StaInvert(); 
           PubRxShift();
-          PKT_Sent_Flag = 0;          
+          PKT_Sent_Flag = 0;
+          PhySendDataStreamIsOver();
         }
       } 
     }
@@ -693,18 +699,12 @@ void gRadio_CheckReceived_ExtreLongPkt(void)
     else
     {
       si446x_read_rx_fifo(RfRxDataLen-wFifoRxCount, rfRxData+wFifoRxCount); 
-      wFifoRxCount=RfRxDataLen; 
+      wFifoRxCount=RfRxDataLen;
       
-      if((*rfRxData)==0xD1)
+      if(RfRxDataLen>5)
       {
-        TimSlotCycleRst();
-      }
-      else
-      {
-        if(RfRxDataLen>4&&((*rfRxData)!=0xD3)&&((*(rfRxData+2))==PX_NUM)&&PxRfRxDataCheck(rfRxData,RfRxDataLen))
-        {
-          RfRxData2PubTx(rfRxData+3, RfRxDataLen-4);
-        }
+        //RfRxData2PubTx(rfRxData+3, RfRxDataLen-4);
+        PhyGetDataStream(rfRxData,RfRxDataLen);
       }
       
       RxBuffer[0]=0;

@@ -36,6 +36,8 @@
  */
 #define PHY_ADDRESS_INFO "PHY_ADDRESS 1.0.00"
 
+#include "SimplexTransferSI4463Config.h"
+
 #ifndef bool
 #define bool unsigned char
 #endif

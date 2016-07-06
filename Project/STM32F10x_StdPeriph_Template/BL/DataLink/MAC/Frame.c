@@ -428,8 +428,8 @@ unsigned char FrameAssemble(unsigned char *payload, unsigned char length)
     
   // Is the received message at least the size of the frame overhead and is the
   // CRC valid?
-  if (length >= FRAME_OVERHEAD_LENGTH 
-      && (PhyGetDataStreamStatus()->status & PROTOCOL_DATASTREAM_FOOTER_CRC))
+  if (length >= FRAME_OVERHEAD_LENGTH) 
+      //&& (PhyGetDataStreamStatus()->status & PROTOCOL_DATASTREAM_FOOTER_CRC))
   {
     gFrameScheduler.length = length - FRAME_OVERHEAD_LENGTH;
     

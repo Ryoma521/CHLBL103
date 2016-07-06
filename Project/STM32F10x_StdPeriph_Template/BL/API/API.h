@@ -33,6 +33,8 @@
  */
 #define API_INFO "API 1.0.01"
 
+#include "SimplexTransferSI4463Config.h"
+
 #ifndef bool
 #define bool unsigned char
 #endif

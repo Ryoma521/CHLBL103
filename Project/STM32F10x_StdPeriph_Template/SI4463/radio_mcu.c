@@ -207,7 +207,7 @@ void EXTILineNIRQ_Config(void)
   NVIC_InitStructure.NVIC_IRQChannel            = NIRQ_IRQChannel; //指定中断源
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;            // 指定响应优先级别1
-  NVIC_InitStructure.NVIC_IRQChannelCmd         = ENABLE;
+  NVIC_InitStructure.NVIC_IRQChannelCmd         = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 }
 

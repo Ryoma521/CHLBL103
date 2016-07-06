@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1827988231
+Checksum=1518958812
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -40,11 +40,13 @@ Sort=4 0
 [CodeCoverage]
 Enabled=_ 0
 [struct_types]
-Fmt0=struct si446x_reply_FIFO_INFO_map-RX_FIFO_COUNT	4	0
-Fmt1=struct si446x_reply_FIFO_INFO_map-TX_FIFO_SPACE	4	0
+Fmt0=struct sPhyDataStream-dataField	4	0
+Fmt1=struct si446x_reply_FIFO_INFO_map-RX_FIFO_COUNT	4	0
+Fmt2=struct si446x_reply_FIFO_INFO_map-TX_FIFO_SPACE	4	0
 [array_types]
 Fmt0=int[50]	3	0
 Fmt1=uint8_t[255]	4	0
+Fmt2=unsigned char[64]	4	0
 [watch_formats]
 Fmt0={W}0:RfRxDataX[0]	4	0
 Fmt1={W}0:RxBuffer[0]	4	0

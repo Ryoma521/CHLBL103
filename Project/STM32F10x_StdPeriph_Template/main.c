@@ -75,104 +75,96 @@ extern uint8 PKT_Sent_Flag;
   * @param  None
   * @retval None
   */
-int main(void)
-{   
-  RCC_ClocksTypeDef RCC_ClockFreq;
-  RCC_GetClocksFreq(&RCC_ClockFreq);
-  
-  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
-  { 
-    /* Capture error */ 
-    while (1);
-  }
-  
-  Il_Hw_Init(); 
-  
-  Init_SI4463_Pin();
-  
-  vRadio_Init(); 
-  
-  ClkSwitch2HseSystemInit();
-
-  RCC_GetClocksFreq(&RCC_ClockFreq);
-  
-  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
-  { 
-    /* Capture error */ 
-    while (1);
-  }
-  
-  Il_Hw_Init(); 
-  
-  Uart_Init();
-    
-  Init_SI4463_Pin();
-  
-//TimingBaseInit(50000);
-  
-//  while(1)
-//  {
-////  //LedD4StaInvert();  
-////    GPIOB->BSRR  = 0x00000040;
-////    GPIOB->BRR  = 0x00000040;
+//int main(void)
+//{   
+//  RCC_ClocksTypeDef RCC_ClockFreq;
+//  RCC_GetClocksFreq(&RCC_ClockFreq);
+//  
+//  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
+//  { 
+//    /* Capture error */ 
+//    while (1);
 //  }
-  
-  //EXTILine_TimingSync_Config();
-  
-  //si446x_get_int_status(0u, 0u, 0u);
-  uint8_t testBuff[6]={0x05,0xD0,0x01,0x02,0x03,0xD6};
-  
-  //UartSendByte(testBuff, 6); 
-  
-  vRadio_StartRX(pRadioConfiguration->Radio_ChannelNumber);
-  
-  RadioGotoRxSta();
-  
-  SI4463_Enable_NIRQ_Int();
-  
-  while(1)
-  { 
-    //vRadio_StartTx_Variable_Packet(0u,&trx_state,1);
-    
-    //Px rx sync?
-    if(SS_Global==S_RTS)
-    {
-
-    }
-    
-    //Px tx data?
-    if((SS_Global==S_P1T)&&(PX_NUM==1))
-    {
-      //unsigned int timMark=GetTimingBase();
-      if(GetPubRxBufCount()>0x00&&(GetTimingBase())<(TIME_SLOT_LEN/3)&&(GetTimingBase())>2&&(GetPktSendFlag()==0))
-      {
-        //UartSendByte(timMark, 1);
-        //UartSendByte(uartRxDataBuff, uartRxCount);
-        //uartDataProcess();
-        PubRxDataProcess();
-      }    
-    }
-    
-    //Px tx data?
-    if(SS_Global==S_P2T&&(PX_NUM==2))
-    {
-      if(GetPubRxBufCount()>0x00&&(GetTimingBase())<(TIME_SLOT_LEN/3)&&(GetTimingBase())>2&&(GetPktSendFlag()==0))
-      {
-        //UartSendByte(timMark, 1);
-        //UartSendByte(uartRxDataBuff, uartRxCount);
-        //uartDataProcess();
-        PubRxDataProcess();
-      }  
-    }
-    
-    //RF receive data?
-    if(GetPubTxBufCount()>0x00)
-    {
-      PubTxDataProcess();
-    }   
-
-  }
-
-}
+//  
+//  Il_Hw_Init(); 
+//  
+//  Init_SI4463_Pin();
+//  
+//  vRadio_Init(); 
+//  
+//  ClkSwitch2HseSystemInit();
+//
+//  RCC_GetClocksFreq(&RCC_ClockFreq);
+//  
+//  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
+//  { 
+//    /* Capture error */ 
+//    while (1);
+//  }
+//  
+//  Il_Hw_Init(); 
+//  
+//  Uart_Init();
+//    
+//  Init_SI4463_Pin();
+//  
+////TimingBaseInit(50000);
+//  
+////  while(1)
+////  {
+//////  //LedD4StaInvert();  
+//////    GPIOB->BSRR  = 0x00000040;
+//////    GPIOB->BRR  = 0x00000040;
+////  }
+//  
+//  //EXTILine_TimingSync_Config();
+//  
+//  //si446x_get_int_status(0u, 0u, 0u);
+//  uint8_t testBuff[6]={0x05,0xD0,0x01,0x02,0x03,0xD6};
+//  
+//  //UartSendByte(testBuff, 6); 
+//  
+//  vRadio_StartRX(pRadioConfiguration->Radio_ChannelNumber);
+//  
+//  RadioGotoRxSta();
+//  
+//  SI4463_Enable_NIRQ_Int();
+//  
+//  while(1)
+//  {     
+//    //Px tx data?
+////    if((SS_Global==S_P1T)&&(PX_NUM==1))
+////    {
+////      //unsigned int timMark=GetTimingBase();
+////      if(GetPubRxBufCount()>0x00&&(GetTimingBase())<(TIME_SLOT_LEN/3)&&(GetTimingBase())>2&&(GetPktSendFlag()==0))
+////      {
+////        //UartSendByte(timMark, 1);
+////        //UartSendByte(uartRxDataBuff, uartRxCount);
+////        //uartDataProcess();
+////        PubRxDataProcess();
+////      }    
+////    }
+////    
+////    //Px tx data?
+////    if(SS_Global==S_P2T&&(PX_NUM==2))
+////    {
+////      if(GetPubRxBufCount()>0x00&&(GetTimingBase())<(TIME_SLOT_LEN/3)&&(GetTimingBase())>2&&(GetPktSendFlag()==0))
+////      {
+////        //UartSendByte(timMark, 1);
+////        //UartSendByte(uartRxDataBuff, uartRxCount);
+////        //uartDataProcess();
+////        PubRxDataProcess();
+////      }  
+////    }
+//    
+////    //RF receive data?
+////    if(GetPubTxBufCount()>0x00)
+////    {
+////      PubTxDataProcess();
+////    }  
+//
+//  }
+//
+//}
 
 /******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
