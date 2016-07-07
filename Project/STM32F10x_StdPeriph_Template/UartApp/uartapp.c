@@ -231,24 +231,11 @@ void uartDataProcess(void)
 
 void PubRxDataProcess(void)
 { 
-  uint16_t length=pub_rx.Buf[0][6]; 
-  length=(length<<8)+pub_rx.Buf[0][7];   
+  uint16_t length=pub_rx.Buf[0][0]; 
+  length=(length<<8)+pub_rx.Buf[0][1];   
   
-  if(length>0x0003&&length<=0x00F9)
-  {
-    pub_rx.Buf[0][0]=((length+6-2)>>8);
-    pub_rx.Buf[0][1]=(length+6-2);
-    pub_rx.Buf[0][2]=0xD3;
-    pub_rx.Buf[0][3]=0x00;
-    pub_rx.Buf[0][4]=PX_NUM;
-    
-    U8 CheckByte=0x00;
-    for(int ii=2;ii<length+5;ii++)
-    {
-      CheckByte+=pub_rx.Buf[0][ii]; 
-    }
-    pub_rx.Buf[0][length+5]=(CheckByte-3); //0xD3 is not 0xD0;
-    
+  if(length>=0x0002&&length<UartFrameMaxLen)
+  {    
     switch(pub_rx.Buf[0][2])
     {
     case 0xC0:
@@ -260,16 +247,16 @@ void PubRxDataProcess(void)
     case 0xD0:
       //back D1
       //send data by RF
-      //vRadio_SlotStartTx_Variable_Packet(0u,uartRxDataBuff[0]+1);
-      //vRadio_StartTx_Variable_Packet(0u,uartRxDataBuff,uDataLen+2);
-      break;
-    case 0xD3:
-      if (!ProtocolSimpleTransfer((unsigned char*)&(pub_rx.Buf[0][0]), length+6))
+      if (!ProtocolSimpleTransfer((unsigned char*)&(pub_rx.Buf[0][3]), length-2)) //去除串口协议Packet Length，Ctrl Word， Address，Check；
       {
         // Put the microcontroller into a low power state (sleep). Remain here
         // until the ISR wakes up the processor.
         //McuSleep();
       }
+      //vRadio_SlotStartTx_Variable_Packet(0u,uartRxDataBuff[0]+1);
+      //vRadio_StartTx_Variable_Packet(0u,uartRxDataBuff,uDataLen+2);
+      break;
+    case 0xD3:
       //vRadio_StartTx_Variable_Packet(0u,pub_rx.Buf[0],length+6);
       break;
     default:
@@ -283,9 +270,7 @@ void PubTxDataProcess(void)
   if(usart_dma_tx_sta==IDLE)
   {
     uint16_t length=pub_tx.Buf[0][2]; 
-    length=(length<<8)+pub_tx.Buf[0][1]; 
-    length=0;
-    length=pub_tx.Buf[0][0];
+    length=(length<<8)+pub_tx.Buf[0][3]+4; 
     if(length<UartFrameMaxLen)
     {
       PubTx2DmaTxBuf(length);
@@ -508,11 +493,11 @@ void LumMod_Uart_DMA_Rx_Data(void)
 
 void DmaRxBuf2PubRx(uint16_t PacketLen)
 {
-  if(PacketLen<=(UartFrameMaxLen-6)&&pub_rx.BufCount<PxUsartBufLen&&DmaUartRxBuf[0]==0xAA)
+  if(PacketLen<=UartFrameMaxLen&&pub_rx.BufCount<PxUsartBufLen&&DmaUartRxBuf[0]==0xAD&&DmaUartRxBuf[1]==0xAD&&uartRxDataCheck(&DmaUartRxBuf[2],PacketLen-4))
   {
     for(int i=0;i<PacketLen;i++)
     {
-      pub_rx.Buf[pub_rx.BufCount][i+5]=DmaUartRxBuf[i];
+      pub_rx.Buf[pub_rx.BufCount][i]=DmaUartRxBuf[i+2]; //去除start header 0xAD 0xAD
     }
     pub_rx.BufCount++;
   } 
@@ -522,10 +507,27 @@ void RfRxData2PubTx(u8 *buf, u32 len)
 {
   if(len<=(UartFrameMaxLen-6)&&pub_tx.BufCount<PxUsartBufLen)
   {
+    pub_tx.Buf[pub_tx.BufCount][0]=0xAD;
+    pub_tx.Buf[pub_tx.BufCount][1]=0xAD;
+    
+    pub_tx.Buf[pub_tx.BufCount][2]=(U8)((len+2)>>8);
+    pub_tx.Buf[pub_tx.BufCount][3]=(U8)(len+2);
+    pub_tx.Buf[pub_tx.BufCount][4]=0xD0;
+
+    
     for(int i=0;i<len;i++)
     {
-      pub_tx.Buf[pub_tx.BufCount][i]=buf[i];
+      pub_tx.Buf[pub_tx.BufCount][i+5]=buf[i];
     }
+        
+    uint8_t tmp=0x00;
+    for(uint16_t j=0;j<len+2-1;j++) //include ctrlword;
+    {
+      tmp+=pub_tx.Buf[pub_tx.BufCount][j+4]; //check from ctrlword to data;
+    }
+    
+    pub_tx.Buf[pub_tx.BufCount][len+5]=tmp;
+    
     pub_tx.BufCount++;
   } 
 }

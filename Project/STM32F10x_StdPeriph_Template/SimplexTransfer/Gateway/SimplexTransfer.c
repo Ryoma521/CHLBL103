@@ -150,13 +150,13 @@ unsigned char TransferComplete(bool dataRequest,
 {
   // Cast the received data pointer to a packet structure pointer so that it may
   // be accessed using the structure member notation.
-  struct sPacket *p = (struct sPacket*)data;
+  //struct sPacket *p = (struct sPacket*)data;
   
   // Retrieve the sequence number and copy the payload from the protocol into
   // the local application packet (gPacket).
-  gPacket.seqNum = p->seqNum;
-  memcpy(gPacket.payload, p->payload, length-1);
-  RfRxData2PubTx(p->payload, length-1);
+  //gPacket.seqNum = p->seqNum;
+  //memcpy(gPacket.payload, p->payload, length-1);
+  RfRxData2PubTx(data, length);
   
   return 0;
 }
@@ -264,9 +264,7 @@ int main(void)
     {
       PubTxDataProcess();
     }  
-  }
-  
-  
+  }  
 }
 
 

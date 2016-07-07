@@ -701,7 +701,7 @@ void gRadio_CheckReceived_ExtreLongPkt(void)
       si446x_read_rx_fifo(RfRxDataLen-wFifoRxCount, rfRxData+wFifoRxCount); 
       wFifoRxCount=RfRxDataLen;
       
-      if(RfRxDataLen>5)
+      if(RfRxDataLen>=5)
       {
         //RfRxData2PubTx(rfRxData+3, RfRxDataLen-4);
         PhyGetDataStream(rfRxData,RfRxDataLen);
