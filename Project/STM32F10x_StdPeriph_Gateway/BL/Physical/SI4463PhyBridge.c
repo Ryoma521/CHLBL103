@@ -214,7 +214,7 @@ void PhyGetDataStream(unsigned char *buf, int len)
     {
       gPhyDevice.stream.dataField[i]=buf[i];
     } 
-    gPhyDevice.stream.footer.rssi=0x00;
+    gPhyDevice.stream.footer.rssi=sRadioGetRSSI();
     gPhyDevice.stream.footer.status=0x00;
     //signed char rssi = gPhyDevice.stream.footer.rssi;
     //gPhyDevice.stream.footer.rssi = (signed int)(A1101ConvertRssiToDbm(phyInfo, rssi) + 1) >> 1;

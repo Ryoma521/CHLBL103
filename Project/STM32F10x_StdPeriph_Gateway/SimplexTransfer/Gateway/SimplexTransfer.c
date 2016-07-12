@@ -67,25 +67,6 @@ extern SEGMENT_VARIABLE( Si446xCmd, union si446x_cmd_reply_union);
 #define ST(X) do { X } while (0)
 
 /**
- *  Abstract hardware based on the supported example platform being used.
- * 
- *  Currently supported platforms:
- *    - TI MSP430G2553 + AIR A110x2500 Booster Pack (BPEXP430G2x53.c)
- */
-#if defined( __MSP430G2553__ )
-#define HardwareInit()\
-  ST\
-  (\
-    WDTCTL = WDTPW | WDTHOLD;\
-    BCSCTL1 = CALBC1_8MHZ;\
-    DCOCTL = CALDCO_8MHZ;\
-  )
-#define McuSleep()    _BIS_SR(LPM4_bits | GIE)  // Low power mode 4
-#define GDO0_VECTOR   PORT2_VECTOR
-#define GDO0_EVENT    P2IFG    
-#endif
-
-/**
  *  sPacket - an example packet. The sequence number is used to demonstrate
  *  communication by sending the same message (payload) and incrementing the
  *  sequence number on each transmission.
@@ -159,36 +140,6 @@ unsigned char TransferComplete(bool dataRequest,
   RfRxData2PubTx(data, length);
   
   return 0;
-}
-
-/**
- *  PlatformInit - sets up platform and protocol hardware. Also configures the
- *  protocol using the setup structure data.
- *
- *    @return   Success of the operation. If true, the protocol has been setup
- *              successfully. If false, an error has occurred during protocol
- *              setup.
- */
-bool PlatformInit(void)
-{
-  // Disable global interrupts during hardware initialization to prevent any
-  // unwanted interrupts from occurring.
-  MCU_DISABLE_INTERRUPT();
-  
-  // Setup basic platform hardware (e.g. watchdog, clocks).
-  HardwareInit();
-  
-  // Attempt to initialize protocol hardware and information using the provided
-  // setup structure data.
-  if (!ProtocolInit(&gProtocolSetupInfo))
-  {
-    return false;
-  }
-  
-  // Re-enable global interrupts for normal operation.
-  MCU_ENABLE_INTERRUPT();
-  
-  return true;
 }
 
 /**

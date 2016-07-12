@@ -501,6 +501,29 @@ void SI4463_Transmit(U8 * Packet,U8 length)
   }
 }
 
+
+U8 AnyBodyTalk(void)
+{
+  do
+  {
+    si446x_get_modem_status();
+    
+    if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI>0x00)
+    {
+      if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI<0x60)
+      {
+        return 0x00;
+      }
+      else
+      {
+        USART_SendData(USART2, Si446xCmd.GET_MODEM_STATUS.CURR_RSSI);
+        return 0x01;
+      }
+    }
+  }
+  while(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI==0); 
+}
+
 U16 wFIFOcount=0;
 U16 PktLen=0;
 U8 *PktPt=NULL;

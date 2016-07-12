@@ -43,7 +43,7 @@
         <Position>2</Position><ScreenPosX>0</ScreenPosX><ScreenPosY>0</ScreenPosY><Windows/></PreferedWindows>
         <expressions>
           
-        <item>RCC_ClockFreq</item><item>SystemCoreClock</item><item>TIM_TimeBaseStructure</item><item>TimBaseValri</item><item>pub_rx</item><item>rf_state</item><item>pub_tx</item><item>PKT_Sent_Flag</item><item>DmaUartRxBuf</item><item>pioRadioPacket</item><item>gFrameScheduler</item><item>gPhyDevice</item><item>pub_tx</item><item>gPacket</item><item></item></expressions>
+        <item>RCC_ClockFreq</item><item>SystemCoreClock</item><item>TIM_TimeBaseStructure</item><item>TimBaseValri</item><item>pub_rx</item><item>rf_state</item><item>pub_tx</item><item>PKT_Sent_Flag</item><item>DmaUartRxBuf</item><item>pioRadioPacket</item><item>gFrameScheduler</item><item>gPhyDevice</item><item>pub_tx</item><item>gPacket</item><item/></expressions>
         <col-names>
           
           

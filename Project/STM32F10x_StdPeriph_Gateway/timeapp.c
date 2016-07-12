@@ -141,54 +141,12 @@ unsigned int timingBase=0;
 void TimingBaseInit(unsigned int UsTime)
 {
   timingBase=0;
-  TIM2_Configuration_Us(UsTime);  
+  //TIM2_Configuration_Us(UsTime);  
 }
 
-
-enum SlotState SS_Global=S_NULL;
-
-void TimSlotCycle(void)
+void TimBaseIncrease(void)
 {
   timingBase++;
-  
-  if(timingBase==TIME_SLOT_LEN)
-  {    
-    if(SS_Global==S_RTD)
-    {
-      RadioGotoRdySta();
-      SS_Global=S_P1T;      
-    }
-    else
-    {
-      if(SS_Global!=S_NULL)
-      {
-        SS_Global++;
-        if(SS_Global==S_NULL)
-        {
-          RadioGotoRxSta();
-        } 
-      }
-      else
-      { 
-        if(GetRadioSta()==RF_RDY)
-        {
-          RadioGotoRxSta();
-        }     
-      }
-        
-    }
-    timingBase=0;    
-//    LedD3StaInvert(); 
-//    LedD4StaInvert(); 
-  }
-  
-
-}
-
-void TimSlotCycleRst(void)
-{
-  SS_Global=S_RTS;
-  timingBase=0;
 }
 
 void TIM2_IsTimeOn(void)
