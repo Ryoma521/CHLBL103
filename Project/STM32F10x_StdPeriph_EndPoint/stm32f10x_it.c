@@ -159,8 +159,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  //TimingDelay_Decrement();
-  TimSlotCycle();
+  TimingDelay_Decrement();  
+  TimBaseIncrease();
 }
 
 /******************************************************************************/

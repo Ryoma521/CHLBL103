@@ -208,7 +208,7 @@ int main(void)
   //EXTILine_TimingSync_Config();
   
   //si446x_get_int_status(0u, 0u, 0u);
-  uint8_t testBuff[6]={0x05,0xD0,0x01,0x02,0x03,0xD6};
+  uint8_t testBuff[64]={0x05,0xD0,0x01,0x02,0x03,0xD6,};
   
   //UartSendByte(testBuff, 6); 
   
@@ -225,6 +225,12 @@ int main(void)
   
   while(true)
   {
+//    while(1)
+//    {
+//      vSampleCode_SendFixPacket(testBuff,64);
+//      DelayMs(5);
+//    }
+    
     if(GetPubRxBufCount()>0x00)
     {
       //UartSendByte(timMark, 1);

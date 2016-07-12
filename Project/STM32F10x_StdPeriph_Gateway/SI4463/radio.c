@@ -647,7 +647,7 @@ void gRadio_CheckReceived_ExtreLongPkt(void)
 {
   
   if(Si446xCmd.GET_INT_STATUS.MODEM_PEND & 0x01) 
-  {     
+  {   
     if(RfRxDataLen==0x00)
     {  
       NopDelayUs(8*100);      
@@ -700,7 +700,7 @@ void gRadio_CheckReceived_ExtreLongPkt(void)
     {
       si446x_read_rx_fifo(RfRxDataLen-wFifoRxCount, rfRxData+wFifoRxCount); 
       wFifoRxCount=RfRxDataLen;
-      
+      USART_SendData(USART2, sRadioGetRSSI()); //´òÓ¡RSSI;
       if(RfRxDataLen>=5)
       {
         //RfRxData2PubTx(rfRxData+3, RfRxDataLen-4);

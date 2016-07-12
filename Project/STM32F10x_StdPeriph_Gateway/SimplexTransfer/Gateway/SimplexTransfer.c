@@ -58,7 +58,7 @@
 #include "timeapp.h" 
 #include "ledapp.h"
 extern SEGMENT_VARIABLE_SEGMENT_POINTER(pRadioConfiguration, tRadioConfiguration) ;
-
+extern SEGMENT_VARIABLE( Si446xCmd, union si446x_cmd_reply_union);
 // -----------------------------------------------------------------------------
 /**
  *  Defines, enumerations, and structure definitions
@@ -263,8 +263,10 @@ int main(void)
     if(GetPubTxBufCount()>0x00)
     {
       PubTxDataProcess();
-    }  
-  }  
+    }
+    //NopDelayMs(50);
+    //si446x_get_modem_status();   
+  }
 }
 
 

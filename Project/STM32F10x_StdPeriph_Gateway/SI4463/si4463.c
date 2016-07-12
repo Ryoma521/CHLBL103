@@ -298,5 +298,37 @@ U8 si446x_configuration_syncword(U8 SyncW3,U8 SyncW2,U8 SyncW1,U8 SyncW0)
   return SI446X_SUCCESS;
 }
 
+uint8  sRadioGetRSSI(void)
+{
+  /* FRR A holds the latched RSSI (if any). */
+  si446x_frr_a_read(SI446X_CMD_REPLY_COUNT_FRR_A_READ);
+  return Si446xCmd.FRR_A_READ.FRR_A_VALUE;
+}
+
+void si446x_get_modem_status(void)//( u8 MODEM_CLR_PEND )
+{  
+    //U16 temp ;
+    
+    Pro2Cmd[0] = SI446X_CMD_ID_GET_MODEM_STATUS;
+    //Pro2Cmd[1] = MODEM_CLR_PEND;
+
+    radio_comm_SendCmdGetResp( SI446X_CMD_ARG_COUNT_GET_MODEM_STATUS,
+                              Pro2Cmd,
+                              SI446X_CMD_REPLY_COUNT_GET_MODEM_STATUS,
+                              Pro2Cmd );
+
+    Si446xCmd.GET_MODEM_STATUS.MODEM_PEND   = Pro2Cmd[0];
+    Si446xCmd.GET_MODEM_STATUS.MODEM_STATUS = Pro2Cmd[1];
+    Si446xCmd.GET_MODEM_STATUS.CURR_RSSI    = Pro2Cmd[2];
+    //RISSData = Pro2Cmd[2] ;
+    Si446xCmd.GET_MODEM_STATUS.LATCH_RSSI   = Pro2Cmd[3];     
+    Si446xCmd.GET_MODEM_STATUS.ANT1_RSSI    = Pro2Cmd[4];
+    Si446xCmd.GET_MODEM_STATUS.ANT2_RSSI    = Pro2Cmd[5];
+//    temp = Pro2Cmd[6] ;
+//    temp = ( temp<<8 )+ Pro2Cmd[7] ;
+    Si446xCmd.GET_MODEM_STATUS.AFC_FREQ_OFFSET[0] = Pro2Cmd[6] ;
+    Si446xCmd.GET_MODEM_STATUS.AFC_FREQ_OFFSET[1] = Pro2Cmd[7] ;
+    USART_SendData(USART2,Si446xCmd.GET_MODEM_STATUS.CURR_RSSI);
+}
 
 

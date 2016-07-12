@@ -115,7 +115,7 @@ struct si446x_reply_GET_MODEM_STATUS_map {
     U8  LATCH_RSSI;
     U8  ANT1_RSSI;
     U8  ANT2_RSSI;
-    UU16 AFC_FREQ_OFFSET;
+    U8 AFC_FREQ_OFFSET[2];
 };
 
 struct si446x_reply_GET_CHIP_STATUS_map {

@@ -501,6 +501,28 @@ void SI4463_Transmit(U8 * Packet,U8 length)
   }
 }
 
+U8 AnyBodyTalk(void)
+{
+  do
+  {
+    si446x_get_modem_status();
+    
+    if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI>0x00)
+    {
+      if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI<0x60)
+      {
+        return 0x00;
+      }
+      else
+      {
+        USART_SendData(USART2, Si446xCmd.GET_MODEM_STATUS.CURR_RSSI);
+        return 0x01;
+      }
+    }
+  }
+  while(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI==0); 
+}
+
 U16 wFIFOcount=0;
 U16 PktLen=0;
 U8 *PktPt=NULL;
@@ -508,8 +530,8 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
 {   
   if(!PKT_Sent_Flag)
   {
-   /* Leave RX state */
-  si446x_change_state(SI446X_CMD_CHANGE_STATE_ARG_NEW_STATE_ENUM_READY);
+   si446x_change_state(SI446X_CMD_CHANGE_STATE_ARG_NEW_STATE_ENUM_RX); //为LBT作准备
+
   //PKT_Sent_Flag = 0;
   
   /*Switch to TX match network*/
@@ -528,7 +550,20 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
   U8 LenBuf[2];
   LenBuf[0]=(U8)(length>>8);
   LenBuf[1]=(U8)length;
-  si446x_write_tx_fifo(2, LenBuf);
+  si446x_write_tx_fifo(2, LenBuf); 
+
+  PKT_Sent_Flag = 1;
+  rf_state =RF_TX;
+  
+  while(AnyBodyTalk())
+  {
+   U8 DelayTime=(U8)GetTimingBase();
+   DelayMs(DelayTime&0x0F);
+   //USART_SendData(USART2,0xDD);
+  }
+  
+  /* Leave RX state */
+  si446x_change_state(SI446X_CMD_CHANGE_STATE_ARG_NEW_STATE_ENUM_READY);
   
   if(length<=0x003E)
   {
@@ -539,9 +574,6 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
     
     /* Start sending packet, channel 0, START immediately */
     si446x_start_tx(channel, 0x30, length+2); 
-   
-    PKT_Sent_Flag = 1;    
-    rf_state =RF_TX;
   }
   else
   {
@@ -556,10 +588,7 @@ void vRadio_StartTx_Variable_Packet(U8 channel, U8 *pioRadioPacket, U16 length)
     /* Fill the TX fifo with datas */
     si446x_write_tx_fifo(0x3E, pioRadioPacket);        
     wFIFOcount+=0x3E;
-    
-    PKT_Sent_Flag = 1;
-    rf_state =RF_TX;   
-    
+  
     /* Start sending packet, channel 0, START immediately */
     si446x_start_tx(channel, 0x30, length+2);
   }
