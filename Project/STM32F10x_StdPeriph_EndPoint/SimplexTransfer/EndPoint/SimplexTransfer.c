@@ -112,8 +112,8 @@ struct sPacket
  */
 static const struct sProtocolSetupInfo gProtocolSetupInfo = {
   { PROTOCOL_CHANNEL_LIST },// Physical channel list
-  { 0x01 },                 // Physical address PAN identifier
-  { 0x02 },                 // Physical address
+  { 0x01,0x01 },                 // Physical address PAN identifier
+  { 0x02,0x02,0x03,0x04},                 // Physical address
   NULL,                     // Protocol Backup callback (not used)
   NULL                      // Protocol Data Transfer Complete callback (not used)
 };

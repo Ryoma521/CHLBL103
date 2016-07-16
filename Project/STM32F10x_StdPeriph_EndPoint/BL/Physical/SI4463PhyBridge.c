@@ -71,7 +71,7 @@
  *  Global data
  */
 
-
+struct PhyCfgPara gPhyCfgPara={0x00,0x09};
 
 
 
@@ -318,13 +318,27 @@ void PhyDisableAddressFilter()
 
 bool PhySetChannel(unsigned char channel)
 {
-  // Set physical hardware to an active state.
-  
+  // Set physical hardware to an active state.  
+  if(channel<=MaxChannelIndex)
+  {
+    gPhyCfgPara.ChannelIndex=channel;
+    return true;
+  }
+  return false;
 }
 
-void PhySetOutputPower(tPower power)
+bool PhySetOutputPower(unsigned char power)
 {
-
+  if(power<=MaxPowerCfgReg)
+  { 
+    if(si446x_configuration_power(power)!=SI446X_SUCCESS)
+    {    
+      return false;
+    }
+    gPhyCfgPara.PowerCfgReg=power; 
+    return true;
+  }
+  return false; 
 }
 
 // -----------------------------------------------------------------------------
@@ -384,6 +398,8 @@ void PhyReceiverOn(unsigned char *dataField)
    */
   //PhyTimerEnableRxTimeout();
   #endif
+  
+  vRadio_StartRX(gPhyCfgPara.ChannelIndex);
 }
 
 bool PhyTransmit(unsigned char *dataField, 
@@ -411,7 +427,7 @@ bool PhyTransmit(unsigned char *dataField,
      *  the radio finishes prior to setting this flag.
      */
     gPhyDevice.status.transmitting = true;
-    vRadio_StartTx_Variable_Packet(0u,dataField,count);
+    vRadio_StartTx_Variable_Packet(gPhyCfgPara.ChannelIndex,dataField,count);
     //CC1101Transmit(&phyInfo->cc1101);
     //¿ªÊ¼·¢ËÍ
     

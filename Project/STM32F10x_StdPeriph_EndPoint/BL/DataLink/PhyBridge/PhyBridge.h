@@ -297,7 +297,7 @@ bool PhySetChannel(unsigned char channel);
  *
  *    @param  power Index of the power level desired from a lookup table.
  */
-void PhySetOutputPower(tPower power);
+bool PhySetOutputPower(unsigned char power);
 
 // -----------------------------------------------------------------------------
 // Physical status

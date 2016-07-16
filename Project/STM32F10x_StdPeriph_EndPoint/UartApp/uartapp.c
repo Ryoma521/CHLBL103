@@ -243,6 +243,7 @@ void PubRxDataProcess(void)
       break;
     case 0xC2:
       //back C3
+      CfgAndResp();
       break;
     case 0xD0:
       //back D1
@@ -532,6 +533,29 @@ void RfRxData2PubTx(u8 *buf, u32 len)
   } 
 }
 
+void CfgResp2PubTx(unsigned char CfgStatus)
+{
+    pub_tx.Buf[pub_tx.BufCount][0]=0xAD;
+    pub_tx.Buf[pub_tx.BufCount][1]=0xAD;
+    
+    pub_tx.Buf[pub_tx.BufCount][2]=0x00;
+    pub_tx.Buf[pub_tx.BufCount][3]=0x05;
+    pub_tx.Buf[pub_tx.BufCount][4]=0xC3;
+    pub_tx.Buf[pub_tx.BufCount][5]=0x00; //Res
+    pub_tx.Buf[pub_tx.BufCount][6]=0x00; //Res
+    pub_tx.Buf[pub_tx.BufCount][7]=CfgStatus; //Res
+    
+    uint8_t tmp=0x00;
+    for(uint16_t j=0;j<5-1;j++) //include ctrlword;
+    {
+      tmp+=pub_tx.Buf[pub_tx.BufCount][j+4]; //check from ctrlword to data;
+    }
+    
+    pub_tx.Buf[pub_tx.BufCount][8]=tmp;
+    
+    pub_tx.BufCount++;
+}
+
 void DMA_Channel7_IRQHandler(void)
 {
     if(DMA_GetITStatus(DMA1_FLAG_TC7))
@@ -582,3 +606,18 @@ uint16_t GetPubTxBufCount(void)
   return pub_tx.BufCount;
 }
 
+void CfgAndResp(void)
+{  
+  if(PhySetChannel(pub_rx.Buf[0][5])&&PhySetOutputPower(pub_rx.Buf[0][6]))
+  {
+    //0xAD 0xAD	0x05	0xC3	0x00 0x00	0x00	0xXX
+    
+    CfgResp2PubTx(0x00);
+  }
+  else
+  {
+    CfgResp2PubTx(0x01);
+  }
+  pub_rx.BufCount--;
+
+}

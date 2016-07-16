@@ -87,10 +87,10 @@
  */
 
 #define PROTOCOL_ENDPOINT                       // Node role
-#define PROTOCOL_CHANNEL_LIST               0   // Physical channel list (comma seperated)
-#define PROTOCOL_CHANNEL_LIST_SIZE          1   // Physical channel list size
-#define PROTOCOL_PHYADDRESS_PANID_SIZE      1   // Physical address PAN identifier size
-#define PROTOCOL_PHYADDRESS_ADDRESS_SIZE    1   // Physical address size
-#define PROTOCOL_FRAME_MAX_PAYLOAD_LENGTH   64   // Maximum frame payload length
+#define PROTOCOL_CHANNEL_LIST               0,2,4,6,8,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40   // Physical channel list (comma seperated)
+#define PROTOCOL_CHANNEL_LIST_SIZE          20   // Physical channel list size
+#define PROTOCOL_PHYADDRESS_PANID_SIZE      2   // Physical address PAN identifier size
+#define PROTOCOL_PHYADDRESS_ADDRESS_SIZE    4   // Physical address size
+#define PROTOCOL_FRAME_MAX_PAYLOAD_LENGTH   0x00FF   // Maximum frame payload length
 
 #endif  /* SIMPLEX_TRANSFER_LR09_CONFIG_H */
