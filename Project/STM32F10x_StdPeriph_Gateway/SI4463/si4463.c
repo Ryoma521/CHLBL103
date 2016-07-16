@@ -298,6 +298,31 @@ U8 si446x_configuration_syncword(U8 SyncW3,U8 SyncW2,U8 SyncW1,U8 SyncW0)
   return SI446X_SUCCESS;
 }
 
+U8 si446x_configuration_power(U8 PowerReg)
+{
+  SEGMENT_VARIABLE(col, U8);
+  U8 RfSyncConfigArry5[8]={0x11, 0x22, 0x04, 0x00, 0x08, PowerReg, 0x00, 0x3D};
+
+    /* Commands structure in the array:
+     * --------------------------------
+     * LEN | <LEN length of data>
+     */
+//#define RF_PA_MODE_4 0x11, 0x22, 0x04, 0x00, 0x08, 0x5F, 0x00, 0x3D 
+  
+  for (col = 0u; col < 8; col++)     
+    {
+      Pro2Cmd[col] = RfSyncConfigArry5[col];
+    }
+
+    if (radio_comm_SendCmdGetResp(8, Pro2Cmd, 0, 0) != 0xFF)
+    {
+      /* Timeout occured */
+      return SI446X_CTS_TIMEOUT;
+    }
+
+  return SI446X_SUCCESS;
+}
+
 uint8  sRadioGetRSSI(void)
 {
   /* FRR A holds the latched RSSI (if any). */

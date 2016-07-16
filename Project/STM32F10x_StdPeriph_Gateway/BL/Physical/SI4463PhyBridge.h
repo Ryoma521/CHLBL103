@@ -39,6 +39,7 @@
 #define SI4463_PHY_BRIDGE_INFO  "SI_PHY_BRIDGE 1.0.01"
    
 #include "PhyBridge.h" 
+#include "si4463.h"
 
 #if defined( A1101R04_MODULE )
 #include "A1101R04.h"
@@ -58,11 +59,18 @@
 /**
  *  Defines, enumerations, and structure definitions
  */
+#define MaxChannelIndex 19
+#define MaxPowerCfgReg 0x7F
 
 // -----------------------------------------------------------------------------
 /**
  *  Global data
  */
+struct PhyCfgPara
+{
+  unsigned char ChannelIndex; //0-19
+  unsigned char PowerCfgReg; //0-9
+};
 
 // -----------------------------------------------------------------------------
 /**

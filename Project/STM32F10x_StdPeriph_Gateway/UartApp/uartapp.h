@@ -57,5 +57,6 @@ void DmaRxBuf2PubRx(uint16_t PacketLen);
 void LumMod_Uart_DAM_Tx_Over(void);
 void PubTx2DmaTxBuf(uint16_t PacketLen);
 void LumMod_Uart_Start_DMA_Tx(uint16_t size);
+void CfgAndResp(void);
 
 #endif

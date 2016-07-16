@@ -112,8 +112,8 @@ unsigned char TransferComplete(bool dataRequest,
  */
 static const struct sProtocolSetupInfo gProtocolSetupInfo = {
   { PROTOCOL_CHANNEL_LIST },// Physical channel list
-  { 0x01 },                 // Physical address PAN identifier
-  { 0x01 },                 // Physical address
+  { 0x01,0x01 },                 // Physical address PAN identifier
+  { 0x01,0x02,0x03,0x04 },                 // Physical address
   NULL,                     // Protocol Link Request callback (not used)
   TransferComplete          // Protocol Data Transfer Complete callback
 };
@@ -216,7 +216,13 @@ int main(void)
       PubTxDataProcess();
     }
     //NopDelayMs(50);
-    //si446x_get_modem_status();   
+    //si446x_get_modem_status();  
+    
+    if(GetPubRxBufCount()>0x00)
+    {
+      PubRxDataProcess();
+    }
+    
   }
 }
 
