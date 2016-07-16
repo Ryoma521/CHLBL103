@@ -59,7 +59,7 @@
 /**
  *  Defines, enumerations, and structure definitions
  */
-#define MaxChannelIndex 19
+#define MaxChannelIndex 20
 #define MaxPowerCfgReg 0x7F
 
 // -----------------------------------------------------------------------------

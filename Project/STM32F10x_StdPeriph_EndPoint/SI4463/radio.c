@@ -509,7 +509,7 @@ U8 AnyBodyTalk(void)
     
     if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI>0x00)
     {
-      if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI<0x60)
+      if(Si446xCmd.GET_MODEM_STATUS.CURR_RSSI<0x80)
       {
         return 0x00;
       }

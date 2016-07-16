@@ -321,7 +321,8 @@ bool PhySetChannel(unsigned char channel)
   // Set physical hardware to an active state.  
   if(channel<=MaxChannelIndex)
   {
-    gPhyCfgPara.ChannelIndex=channel;
+    gPhyCfgPara.ChannelIndex=channel*2;
+    vRadio_StartRX(gPhyCfgPara.ChannelIndex);
     return true;
   }
   return false;

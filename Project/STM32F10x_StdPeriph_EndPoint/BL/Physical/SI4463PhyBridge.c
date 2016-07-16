@@ -321,7 +321,7 @@ bool PhySetChannel(unsigned char channel)
   // Set physical hardware to an active state.  
   if(channel<=MaxChannelIndex)
   {
-    gPhyCfgPara.ChannelIndex=channel;
+    gPhyCfgPara.ChannelIndex=channel*2;
     return true;
   }
   return false;
