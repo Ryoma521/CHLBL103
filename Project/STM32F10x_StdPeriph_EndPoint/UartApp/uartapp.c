@@ -240,10 +240,13 @@ void PubRxDataProcess(void)
     {
     case 0xC0:
       //back C1
+      QueryResp();
+      pub_rx.BufCount--;
       break;
     case 0xC2:
       //back C3
-      CfgAndResp();
+      CfgAndResp();    
+      pub_rx.BufCount--;
       break;
     case 0xD0:
       //back D1
@@ -556,6 +559,36 @@ void CfgResp2PubTx(unsigned char CfgStatus)
     pub_tx.BufCount++;
 }
 
+void QueryResp(void)
+{
+    pub_tx.Buf[pub_tx.BufCount][0]=0xAD;
+    pub_tx.Buf[pub_tx.BufCount][1]=0xAD;
+    
+    pub_tx.Buf[pub_tx.BufCount][2]=0x00;
+    pub_tx.Buf[pub_tx.BufCount][3]=0x0C;
+    pub_tx.Buf[pub_tx.BufCount][4]=0xC1;
+    pub_tx.Buf[pub_tx.BufCount][5]=0x00; //Res
+    pub_tx.Buf[pub_tx.BufCount][6]=0x00; //Res
+    pub_tx.Buf[pub_tx.BufCount][7]=PhyGetChannel()/2; //FreqIndex
+    pub_tx.Buf[pub_tx.BufCount][8]=PhyGetPowerReg(); //PowerReg
+    pub_tx.Buf[pub_tx.BufCount][9]=0x00; //PHY ADDR
+    pub_tx.Buf[pub_tx.BufCount][10]=0x00; //PHY ADDR
+    pub_tx.Buf[pub_tx.BufCount][11]=0x00; //PHY ADDR
+    pub_tx.Buf[pub_tx.BufCount][12]=0x00; //PHY ADDR
+    pub_tx.Buf[pub_tx.BufCount][13]=0x00; //PAN ID
+    pub_tx.Buf[pub_tx.BufCount][14]=0x00; //PAN ID
+    
+    uint8_t tmp=0x00;
+    for(uint16_t j=0;j<12-1;j++) //include ctrlword;
+    {
+      tmp+=pub_tx.Buf[pub_tx.BufCount][j+4]; //check from ctrlword to data;
+    }
+    
+    pub_tx.Buf[pub_tx.BufCount][15]=tmp;
+    
+    pub_tx.BufCount++;
+}
+
 void DMA_Channel7_IRQHandler(void)
 {
     if(DMA_GetITStatus(DMA1_FLAG_TC7))
@@ -617,7 +650,5 @@ void CfgAndResp(void)
   else
   {
     CfgResp2PubTx(0x01);
-  }
-  pub_rx.BufCount--;
-
+  }     
 }

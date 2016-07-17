@@ -328,6 +328,11 @@ bool PhySetChannel(unsigned char channel)
   return false;
 }
 
+unsigned char PhyGetChannel(void)
+{
+  return gPhyCfgPara.ChannelIndex;
+}
+
 bool PhySetOutputPower(unsigned char power)
 {
   if(power<=MaxPowerCfgReg)
@@ -340,6 +345,11 @@ bool PhySetOutputPower(unsigned char power)
     return true;
   }
   return false; 
+}
+
+unsigned char PhyGetPowerReg(void)
+{
+  return gPhyCfgPara.PowerCfgReg;
 }
 
 // -----------------------------------------------------------------------------
