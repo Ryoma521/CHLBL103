@@ -61,6 +61,11 @@ void si446x_reset(void)
     radio_comm_ClearCTS();
 }
 
+void si446x_shutdown(void)
+{
+  radio_hal_AssertShutdown();
+}
+
 U8 si446x_configuration_init(const U8* pSetPropCmd)
 {
   SEGMENT_VARIABLE(col, U8);

@@ -216,7 +216,27 @@ void USART1_IRQHandler(void)
   */ 
 void USART2_IRQHandler(void)
 {
-  USART_IDLE_IRQHandler();
+  USART_IDLE_IRQHandler();  
+//  RCC_ClocksTypeDef RCC_ClockFreq;
+//  ClkSwitch2HsiSystemInit();
+//  RCC_GetClocksFreq(&RCC_ClockFreq);
+//  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
+//  { 
+//    /* Capture error */ 
+//      while (1);
+//  }
+//    Il_Hw_Init(); 
+//  
+//  Uart_Init();
+//    
+//  Init_SI4463_Pin();  
+//  
+//  RadioGotoRxSta();
+//  
+//  SI4463_Enable_NIRQ_Int();
+  
+
+  
 //  if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
 //  { 
 ////    /* Read one byte from the receive data register */
@@ -267,6 +287,26 @@ void EXTI1_IRQHandler(void)
   
 }
 
+void EXTI3_IRQHandler(void)
+{ 
+  if(EXTI_GetITStatus(EXTI_Line3) != RESET)
+  {
+    /* Check if the Wake-Up flag is set */
+    if(PWR_GetFlagStatus(PWR_FLAG_WU) != RESET)
+    {
+      /* Clear Wake Up flag */
+      PWR_ClearFlag(PWR_FLAG_WU);
+    }
+    
+    //if(Check_InUsart2Config() == 0)
+    {      
+      USART2_Config_After_Stop();
+      //Exit_LowPower_StopMode_ByUSART2();
+    }
+    EXTI_ClearFlag(EXTI_Line3);
+    EXTI_ClearITPendingBit(EXTI_Line3);   
+  }   
+}
 
 void EXTI9_5_IRQHandler(void)
 {  

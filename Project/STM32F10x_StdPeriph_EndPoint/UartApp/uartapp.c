@@ -346,6 +346,9 @@ void PubRxTxInit(void)
   pub_tx.BufCount=0;
 }
 
+
+
+
 void Uart_Init(void)
 {
   PubRxTxInit();
@@ -479,6 +482,9 @@ void USART_IDLE_IRQHandler(void)
         LumMod_Uart_DMA_Rx_Data();
         USART_ReceiveData( USART2 ); // Clear IDLE interrupt flag bit
     }
+    USART_ClearFlag(USART2, USART_IT_IDLE);
+    USART_ClearFlag(USART2, USART_DMAReq_Tx);
+    USART_ClearFlag(USART2, USART_DMAReq_Rx);
 }
 
 void LumMod_Uart_DMA_Rx_Data(void)
@@ -651,4 +657,109 @@ void CfgAndResp(void)
   {
     CfgResp2PubTx(0x01);
   }     
+}
+
+
+void USART2_Config(void)
+{
+  EXTI_ClearFlag(EXTI_Line3);
+  EXTI_ClearITPendingBit(EXTI_Line3);
+  
+  GPIO_InitTypeDef GPIO_InitStructure;
+  EXTI_InitTypeDef EXTI_InitStructure;
+  NVIC_InitTypeDef NVIC_InitStructure;
+  USART_InitTypeDef USART_InitStructure;
+  
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;//GPIO_Mode_AF
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);  
+    
+  EXTI_InitStructure.EXTI_Line    = EXTI_Line3;                 //外部中断线
+  EXTI_InitStructure.EXTI_Mode    = EXTI_Mode_Interrupt;        //中断模式
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;       //中断触发方式
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;                     //打开中断
+  EXTI_Init(&EXTI_InitStructure);
+  GPIO_EXTILineConfig(GPIO_PortSourceGPIOA, GPIO_PinSource3);   //选择 GPIO管脚用作外部中断线路
+
+  
+  //NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);               // 抢占式优先级别
+  NVIC_InitStructure.NVIC_IRQChannel            = EXTI3_IRQn; //指定中断源
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;//用于USART Rx唤醒MCU
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;          // 指定响应优先级别1
+  NVIC_InitStructure.NVIC_IRQChannelCmd         = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+  
+      /* USART Format configuration ------------------------------------------------------*/
+ 
+//    USART_InitStructure.USART_WordLength = USART_WordLength_8b;    // 串口格式配置
+//    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+//    USART_InitStructure.USART_Parity = USART_Parity_No;
+//    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+//    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+// 
+//    /* Configure USART2 */
+//    USART_InitStructure.USART_BaudRate = 38400;  //  波特率设置
+//    //USART_Init(LUMMOD_UART, &USART_InitStructure);
+//    STM_EVAL_COMInit(COM2, &USART_InitStructure);
+//    
+//    /* Enable USART2 Receive and Transmit interrupts */
+//    USART_ITConfig(LUMMOD_UART, USART_IT_RXNE, ENABLE);  // 开启 串口空闲IDEL 中断
+//   
+//    /* Enable the USART2 */
+//    USART_Cmd(LUMMOD_UART, ENABLE);  // 开启串口
+
+}
+
+void Exit_LowPower_StopMode_ByUSART2(void)
+{
+//  RCC_ClocksTypeDef RCC_Clocks;
+//  SystemInit();
+//  //SetHSISysClock();//
+//  PWR_VoltageScalingConfig(PWR_VoltageScaling_Range1);
+//  SetSysClock_AfterWakeUp();  
+//  USART_ClearFlag(USART2, USART_FLAG_RXNE);
+
+    
+  SystemInit();
+  RCC_ClocksTypeDef RCC_ClockFreq;
+  RCC_GetClocksFreq(&RCC_ClockFreq);
+  
+  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
+  { 
+    /* Capture error */ 
+    while (1);
+  }
+  
+  Il_Hw_Init(); 
+  
+  Init_SI4463_Pin();
+  
+  vRadio_Init(); 
+  
+  ClkSwitch2HseSystemInit();
+
+  RCC_GetClocksFreq(&RCC_ClockFreq);
+  
+  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
+  { 
+    /* Capture error */ 
+    while (1);
+  }
+  
+  Il_Hw_Init(); 
+  
+  Uart_Init();
+    
+  Init_SI4463_Pin();
+}
+
+void USART2_Config_After_Stop(void)//PA3
+{
+  NVIC_InitTypeDef NVIC_InitStructure;
+  //NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);               // 抢占式优先级别
+  NVIC_InitStructure.NVIC_IRQChannel            = EXTI3_IRQn; //指定中断源
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;//用于USART Rx唤醒MCU
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;          // 指定响应优先级别1
+  NVIC_InitStructure.NVIC_IRQChannelCmd         = DISABLE;
+  NVIC_Init(&NVIC_InitStructure);
 }

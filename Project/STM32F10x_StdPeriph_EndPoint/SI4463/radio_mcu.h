@@ -70,4 +70,6 @@ void SI4463_SW1_UP(void);
 void SI4463_SW1_DOWN(void);
 void SI4463_SW2_UP(void);
 void SI4463_SW2_DOWN(void);
+
+void SI4463_Enable_NIRQ_RX(void);
 #endif

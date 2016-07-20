@@ -51,6 +51,53 @@ void Init_SI4463_Pin(void)
   
 }
 
+void LowPower_SI4463_Pin(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct;
+  
+     /* Enable GPIOB clock */
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);
+  
+  /*PA4,SDN*/
+  GPIO_InitStruct.GPIO_Pin = PIN_SDN;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_OD;
+  GPIO_Init(PORT_SDN, &GPIO_InitStruct);   
+  
+  /*PB0,SCLK*/
+  GPIO_InitStruct.GPIO_Pin = PIN_SCLK;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(PORT_SCLK, &GPIO_InitStruct);
+  
+  /*PC5,SDO*/
+  GPIO_InitStruct.GPIO_Pin = PIN_SDO;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(PORT_SDO, &GPIO_InitStruct);
+  
+  /*PC4,SDI*/
+  GPIO_InitStruct.GPIO_Pin = PIN_SDI;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(PORT_SDI, &GPIO_InitStruct);
+  
+  /*PA7,NSEL*/
+  GPIO_InitStruct.GPIO_Pin = PIN_NSEL;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_Init(PORT_NSEL, &GPIO_InitStruct);   
+
+  /*PB1,nIRQ*/
+  GPIO_InitStruct.GPIO_Pin = PIN_NIRQ;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;
+  GPIO_Init(PORT_NIRQ, &GPIO_InitStruct);  
+ 
+  //EXTILineNIRQ_Config();
+  
+}
+
 void SI4463_SDN_UP(void)
 {
   GPIO_SetBits(PORT_SDN, PIN_SDN);
@@ -142,7 +189,7 @@ void SI4463_Enable_NIRQ_TX()
   GPIO_Init(PORT_NIRQ, &GPIO_InitStruct);
 }
 
-void SI4463_Enable_NIRQ_RX()
+void SI4463_Enable_NIRQ_RX(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct;
   

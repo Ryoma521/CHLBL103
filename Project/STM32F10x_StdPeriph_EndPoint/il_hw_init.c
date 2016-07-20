@@ -146,6 +146,36 @@ void Il_Hw_Init(void)
   //UartSendByte(utest, 6);
 }
 
+void Il_Hw_LowPower(void)
+{
+  /*!< At this stage the microcontroller clock setting is already configured, 
+       this is done through SystemInit() function which is called from startup
+       file (startup_stm32f10x_xx.s) before to branch to application main.
+       To reconfigure the default setting of SystemInit() function, refer to
+       system_stm32f10x.c file
+     */   
+
+  /* System Clocks Configuration */
+  //RCC_Configuration();  
+  
+  /* NVIC configuration */
+  NVIC_Configuration(); 
+  
+  /*PA0, PA1, PA8, PA9*/
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(GPIOA, &GPIO_InitStructure);  
+ 
+  
+  /*LED*/
+  /* Configure PB5 and PB6 in output pushpull mode */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All&0x00FD;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AIN;
+  GPIO_Init(GPIOB, &GPIO_InitStructure);   
+}
+
 /**
   * @brief  Configures the different system clocks.
   * @param  None

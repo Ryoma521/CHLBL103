@@ -155,6 +155,138 @@ bool PlatformInit(void)
   return true;
 }
 
+void RTC_Configuration(void)
+{
+  /* RTC clock source configuration ------------------------------------------*/
+  /* Allow access to BKP Domain */
+  PWR_BackupAccessCmd(ENABLE);
+
+  /* Reset Backup Domain */
+  BKP_DeInit();
+  
+  /* Enable the LSI OSC */
+  //RCC_LSIConfig(RCC_LSI_ON);
+  RCC_LSICmd(ENABLE);
+  /* Wait till LSE is ready */
+  while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET)
+  {
+  }
+
+  /* Select the RTC Clock Source */
+  RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+
+  /* Enable the RTC Clock */
+  RCC_RTCCLKCmd(ENABLE);
+
+  /* RTC configuration -------------------------------------------------------*/
+  /* Wait for RTC APB registers synchronisation */
+  RTC_WaitForSynchro();
+
+  /* Set the RTC time base to 1s */
+  //RTC_SetPrescaler(32767);  
+  RTC_SetPrescaler(40000);  
+  /* Wait until last write operation on RTC registers has finished */
+  RTC_WaitForLastTask();
+
+  /* Enable the RTC Alarm interrupt */
+  RTC_ITConfig(RTC_IT_ALR, ENABLE);
+  /* Wait until last write operation on RTC registers has finished */
+  RTC_WaitForLastTask();
+}
+
+
+void EnterIntoStopMode(void)
+{
+  RCC_ClocksTypeDef RCC_ClockFreqx;
+  ClkSwitch2HsiSystemInit();
+  RCC_GetClocksFreq(&RCC_ClockFreqx);
+  
+  if (SysTick_Config(RCC_ClockFreqx.HCLK_Frequency/1000))
+  { 
+    /* Capture error */ 
+    while (1);
+  }
+  
+  si446x_shutdown();
+  DelayMs(5000);
+  
+  USART2_Config_After_Stop();
+  
+//  /* Enable USART2 Receive and Transmit interrupts */
+//  USART_ITConfig(USART2, USART_IT_IDLE, DISABLE);  // 开启 串口空闲IDEL 中断
+//   
+//  /* Enable the USART2 */
+//  USART_Cmd(USART2, DISABLE);  // 开启串口
+//  /* Enable USARTy DMA TX request */
+//  USART_DMACmd(USART2, USART_DMAReq_Tx, DISABLE);  // 开启串口DMA发送
+//  USART_DMACmd(USART2, USART_DMAReq_Rx, DISABLE); 
+//  USART_ClearFlag(USART2, USART_IT_IDLE);
+//  USART_ClearFlag(USART2, USART_DMAReq_Tx);
+//  USART_ClearFlag(USART2, USART_DMAReq_Rx);
+    
+  SI4463_Disable_NIRQ_Int();
+//  Il_Hw_LowPower();
+//  LowPower_SI4463_Pin();
+
+  //PWR_EnterSTANDBYMode(); 
+  //Uart_Init();
+    
+  //USART_WakeUpConfig(USART2,USART_WakeUp_IdleLine);//静默模式设置 1、USART_WakeUp_IdleLine 空闲总线唤醒//2、USART_WakeUp_AddressMark地址标记唤醒
+  //USART_SetAddress(USART2, 0xAD);           //设置地址从机1
+  //USART_ReceiverWakeUpCmd(USART2,ENABLE);          //使能接收唤醒
+  
+//  /* Disable the SysTick timer */
+//  SysTick->CTRL &= (~SysTick_CTRL_ENABLE);
+//
+//  /* Enable Power Interface clock */
+//  RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+//	
+//  /* configure MCU to go in stop/standby mode after WFI instruction and not in sleep */
+//  SCB->SCR |= SCB_SCR_SLEEPDEEP;
+//	
+//  /* configure MCU to go in stop mode after WFI instruction and not in standby */
+//  PWR->CR &= (~PWR_CR_PDDS);
+//  
+//  /* Configure MCU to go in stop mode with regulator in low power mode */
+//  PWR->CR |= PWR_CR_LPDS;
+//
+//  /* Disable VREFINT to save current */
+//  PWR->CR |= PWR_CR_DBP;
+//
+//  /* Disable PVDE to save current */
+//  PWR->CR &= (~PWR_CR_PVDE);
+//
+//  /* Wait for interrupt instruction, device go to sleep mode */
+//  __WFI();  
+  
+  /* Enable PWR and BKP clock */
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);
+  
+  /* Configure RTC clock source and prescaler */
+  RTC_Configuration();
+  
+  RCC_HSICmd(DISABLE);
+  RCC_HSEConfig(RCC_HSE_OFF);
+  RCC_LSEConfig(RCC_LSE_OFF);
+
+  Il_Hw_LowPower();
+  LedD3Off(); 
+  LedD4Off();     
+  LowPower_SI4463_Pin();
+  
+  USART2_Config();
+  //while(1);
+  
+  PWR_EnterSTOPMode(PWR_Regulator_LowPower,PWR_STOPEntry_WFI);
+
+  if(PWR_GetFlagStatus(PWR_FLAG_WU) != RESET)
+  {
+    /* Clear Wake Up flag */
+    PWR_ClearFlag(PWR_FLAG_WU);
+  }
+}
+
+
 /**
  *  main - main application loop. Sets up platform and then performs simple
  *  transfers (simplex) while incrementing the sequence number for the lifetime 
@@ -192,7 +324,7 @@ int main(void)
   
   Il_Hw_Init(); 
   
-  Uart_Init();
+  //Uart_Init();
     
   Init_SI4463_Pin();
   
@@ -242,13 +374,19 @@ int main(void)
     if(GetPubTxBufCount()>0x00)
     {
       PubTxDataProcess();
-    }  
-    
+    }   
+
     if (!ProtocolBusy())
     {
       // Increment the sequence number for the next transmission.
       gPacket.seqNum++;
+    } 
+    
+    if(GetPubTxBufCount()==0x00&&GetPubRxBufCount()==0x00)
+    {
+      EnterIntoStopMode();
     }
+    
   }
   
 //  while (true)
@@ -274,6 +412,7 @@ int main(void)
 //    }
 //  }
 }
+
 
 /**
  *  GDO0Isr - GDO0 interrupt service routine. This service routine will always
@@ -310,3 +449,4 @@ void GDO0Isr(void)
 
 // Note: No hardware timer interrupt required for this example because the 
 // End Point node does not perform half duplex transfers.
+
