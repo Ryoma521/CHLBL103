@@ -197,6 +197,11 @@ void RTC_Configuration(void)
 
 void EnterIntoStopMode(void)
 {
+  USART2_Config_After_Stop();
+  
+  /* Enable USART2 Receive and Transmit interrupts */
+  USART_ITConfig(USART2, USART_IT_IDLE, DISABLE);  // 开启 串口空闲IDEL 中断
+  
   RCC_ClocksTypeDef RCC_ClockFreqx;
   ClkSwitch2HsiSystemInit();
   RCC_GetClocksFreq(&RCC_ClockFreqx);
@@ -209,11 +214,7 @@ void EnterIntoStopMode(void)
   
   si446x_shutdown();
   DelayMs(5000);
-  
-  USART2_Config_After_Stop();
-  
-//  /* Enable USART2 Receive and Transmit interrupts */
-//  USART_ITConfig(USART2, USART_IT_IDLE, DISABLE);  // 开启 串口空闲IDEL 中断
+
 //   
 //  /* Enable the USART2 */
 //  USART_Cmd(USART2, DISABLE);  // 开启串口
@@ -324,9 +325,11 @@ int main(void)
   
   Il_Hw_Init(); 
   
-  //Uart_Init();
+  Uart_Init();
     
   Init_SI4463_Pin();
+  
+  vRadio_Init(); 
   
 //TimingBaseInit(50000);
   
@@ -382,9 +385,15 @@ int main(void)
       gPacket.seqNum++;
     } 
     
-    if(GetPubTxBufCount()==0x00&&GetPubRxBufCount()==0x00)
+    if(GetPubTxBufCount()==0x00&&GetPubRxBufCount()==0x00&&GetUsartDmaTxSta()==IDLE)
     {
       EnterIntoStopMode();
+      
+      Init_SI4463_Pin();
+      vRadio_Init(); 
+      vRadio_StartRX(pRadioConfiguration->Radio_ChannelNumber);
+      RadioGotoRxSta();
+      SI4463_Enable_NIRQ_Int();
     }
     
   }

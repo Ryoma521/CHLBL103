@@ -15,7 +15,7 @@ void Init_SI4463_Pin(void)
   GPIO_InitTypeDef GPIO_InitStruct;
   
      /* Enable GPIOB clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC, ENABLE);
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);
   
   /*PA4,SDN*/
   GPIO_InitStruct.GPIO_Pin = PIN_SDN;
@@ -94,8 +94,7 @@ void LowPower_SI4463_Pin(void)
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU;
   GPIO_Init(PORT_NIRQ, &GPIO_InitStruct);  
  
-  //EXTILineNIRQ_Config();
-  
+  //EXTILineNIRQ_Config();  
 }
 
 void SI4463_SDN_UP(void)
@@ -236,7 +235,7 @@ void EXTILineNIRQ_Config(void)
   NVIC_InitTypeDef   NVIC_InitStructure;
 
   /* Enable GPIOB clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);  
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB, ENABLE);  
   
   SI4463_Enable_NIRQ_RX();
   

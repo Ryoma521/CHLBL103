@@ -33,6 +33,8 @@ uint8_t DmaUartTxBuf[UartFrameMaxLen];
 uint8_t DmaUartRxBuf[UartFrameMaxLen];
 
 enum UsartDmaTxSta usart_dma_tx_sta=IDLE;
+extern SEGMENT_VARIABLE_SEGMENT_POINTER(pRadioConfiguration, tRadioConfiguration) ;
+
 
 void uartRxData(USART_TypeDef* USARTx)
 {
@@ -144,6 +146,17 @@ void uartRxReset(void)
 
 uint8_t uartRxDataCheck(uint8_t* dataBuf, uint16_t dataLen)
 {
+  uint16_t tmpDataLen=(*(dataBuf+2));
+  tmpDataLen=(tmpDataLen<<8)+(*(dataBuf+3));
+  if(dataLen==tmpDataLen)
+  {
+    return 0x01;
+  }
+  else
+  {
+    return 0x00;
+  }
+  
   uint8_t tmp=0x00;
   for(uint16_t i=0;i<dataLen-1;i++) //include ctrlword;
   {
@@ -373,14 +386,14 @@ void Uart_Init(void)
   
   /* Enable the DMA Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = LUMMOD_UART_Tx_DMA_IRQ;   // 发送DMA通道的中断配置
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;     // 优先级设置
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;     // 优先级设置
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
   
   /* Enable the USART Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = LUMMOD_UART_IRQn;     // 串口中断配置
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
@@ -482,9 +495,9 @@ void USART_IDLE_IRQHandler(void)
         LumMod_Uart_DMA_Rx_Data();
         USART_ReceiveData( USART2 ); // Clear IDLE interrupt flag bit
     }
-    USART_ClearFlag(USART2, USART_IT_IDLE);
-    USART_ClearFlag(USART2, USART_DMAReq_Tx);
-    USART_ClearFlag(USART2, USART_DMAReq_Rx);
+    //USART_ClearFlag(USART2, USART_IT_IDLE);
+    //USART_ClearFlag(USART2, USART_DMAReq_Tx);
+    //USART_ClearFlag(USART2, USART_DMAReq_Rx);
 }
 
 void LumMod_Uart_DMA_Rx_Data(void)
@@ -622,6 +635,10 @@ void LumMod_Uart_Start_DMA_Tx(uint16_t size)
   }
 }
 
+enum UsartDmaTxSta GetUsartDmaTxSta(void)
+{
+  return usart_dma_tx_sta;
+}
 
 void PubTx2DmaTxBuf(uint16_t PacketLen)
 {
@@ -720,7 +737,7 @@ void Exit_LowPower_StopMode_ByUSART2(void)
 //  USART_ClearFlag(USART2, USART_FLAG_RXNE);
 
     
-  SystemInit();
+  //SystemInit();
   RCC_ClocksTypeDef RCC_ClockFreq;
   RCC_GetClocksFreq(&RCC_ClockFreq);
   
@@ -745,12 +762,10 @@ void Exit_LowPower_StopMode_ByUSART2(void)
     /* Capture error */ 
     while (1);
   }
+  Uart_Init();  
+  Il_Hw_Init();
   
-  Il_Hw_Init(); 
-  
-  Uart_Init();
-    
-  Init_SI4463_Pin();
+
 }
 
 void USART2_Config_After_Stop(void)//PA3

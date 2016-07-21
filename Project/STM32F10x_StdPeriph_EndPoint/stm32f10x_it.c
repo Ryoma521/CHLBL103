@@ -301,10 +301,10 @@ void EXTI3_IRQHandler(void)
     //if(Check_InUsart2Config() == 0)
     {      
       USART2_Config_After_Stop();
-      //Exit_LowPower_StopMode_ByUSART2();
+      Exit_LowPower_StopMode_ByUSART2();
     }
-    EXTI_ClearFlag(EXTI_Line3);
-    EXTI_ClearITPendingBit(EXTI_Line3);   
+    //EXTI_ClearFlag(EXTI_Line3);
+    //EXTI_ClearITPendingBit(EXTI_Line3);   
   }   
 }
 
