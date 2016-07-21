@@ -493,9 +493,12 @@ void USART_IDLE_IRQHandler(void)
         USART_ReceiveData( USART2 ); // Clear IDLE interrupt flag bit
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     //USART_ClearFlag(USART2, USART_IT_IDLE);
     //USART_ClearFlag(USART2, USART_DMAReq_Tx);
     //USART_ClearFlag(USART2, USART_DMAReq_Rx);
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 >>>>>>> parent of 302dcd7... E: Low Power Version
 }
@@ -676,6 +679,7 @@ void CfgAndResp(void)
   }     
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 void USART2_Config(void)
@@ -779,5 +783,7 @@ void USART2_Config_After_Stop(void)//PA3
   NVIC_InitStructure.NVIC_IRQChannelCmd         = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 }
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 >>>>>>> parent of 302dcd7... E: Low Power Version

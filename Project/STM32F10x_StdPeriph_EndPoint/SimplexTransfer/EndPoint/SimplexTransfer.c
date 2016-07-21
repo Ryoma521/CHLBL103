@@ -156,6 +156,7 @@ bool PlatformInit(void)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void RTC_Configuration(void)
 {
   /* RTC clock source configuration ------------------------------------------*/
@@ -291,6 +292,8 @@ void EnterIntoStopMode(void)
 
 =======
 >>>>>>> parent of 302dcd7... E: Low Power Version
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 /**
  *  main - main application loop. Sets up platform and then performs simple
  *  transfers (simplex) while incrementing the sequence number for the lifetime 
@@ -387,6 +390,7 @@ int main(void)
       // Increment the sequence number for the next transmission.
       gPacket.seqNum++;
 <<<<<<< HEAD
+<<<<<<< HEAD
     } 
     
     if(GetPubTxBufCount()==0x00&&GetPubRxBufCount()==0x00&&GetUsartDmaTxSta()==IDLE)
@@ -398,6 +402,8 @@ int main(void)
       vRadio_StartRX(pRadioConfiguration->Radio_ChannelNumber);
       RadioGotoRxSta();
       SI4463_Enable_NIRQ_Int();
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 >>>>>>> parent of 302dcd7... E: Low Power Version
     }

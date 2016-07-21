@@ -10,7 +10,11 @@ LimitSize=0
 ByteLimit=50
 [DebugChecksum]
 <<<<<<< HEAD
+<<<<<<< HEAD
 Checksum=450719552
+=======
+Checksum=419420588
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 Checksum=419420588
 >>>>>>> parent of 302dcd7... E: Low Power Version
@@ -142,11 +146,16 @@ Exclusions=
 mode=0
 [Breakpoints2]
 <<<<<<< HEAD
+<<<<<<< HEAD
 Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\UartApp\uartapp.c}.608.5" 0 0 1 "" 0 "" 0
 Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\SimplexTransfer\EndPoint\SimplexTransfer.c}.281.3" 0 0 1 "" 0 "" 0
 Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\UartApp\uartapp.c}.519.3" 0 0 1 "" 0 "" 0
 Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\stm32f10x_it.c}.303.7" 0 0 1 "" 0 "" 0
 Count=4
+=======
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\BL\DataLink\MAC\Frame.c}.262.5" 0 0 1 "" 0 "" 0
+Count=1
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\BL\DataLink\MAC\Frame.c}.262.5" 0 0 1 "" 0 "" 0
 Count=1

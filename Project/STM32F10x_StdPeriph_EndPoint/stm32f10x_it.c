@@ -268,6 +268,7 @@ void EXTI1_IRQHandler(void)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void EXTI3_IRQHandler(void)
 { 
   if(EXTI_GetITStatus(EXTI_Line3) != RESET)
@@ -288,6 +289,8 @@ void EXTI3_IRQHandler(void)
     //EXTI_ClearITPendingBit(EXTI_Line3);   
   }   
 }
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 =======
 >>>>>>> parent of 302dcd7... E: Low Power Version
 
