@@ -39,3 +39,6 @@
 *.wsdt
 *.pbd
 *.browse
+*.dbgdt
+Project/STM32F10x_StdPeriph_EndPoint/EWARM/settings/Project.dni
+*.dbgdt
