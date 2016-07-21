@@ -216,27 +216,7 @@ void USART1_IRQHandler(void)
   */ 
 void USART2_IRQHandler(void)
 {
-  USART_IDLE_IRQHandler();  
-//  RCC_ClocksTypeDef RCC_ClockFreq;
-//  ClkSwitch2HsiSystemInit();
-//  RCC_GetClocksFreq(&RCC_ClockFreq);
-//  if (SysTick_Config(RCC_ClockFreq.HCLK_Frequency/1000))
-//  { 
-//    /* Capture error */ 
-//      while (1);
-//  }
-//    Il_Hw_Init(); 
-//  
-//  Uart_Init();
-//    
-//  Init_SI4463_Pin();  
-//  
-//  RadioGotoRxSta();
-//  
-//  SI4463_Enable_NIRQ_Int();
-  
-
-  
+  USART_IDLE_IRQHandler();
 //  if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
 //  { 
 ////    /* Read one byte from the receive data register */
@@ -287,6 +267,7 @@ void EXTI1_IRQHandler(void)
   
 }
 
+<<<<<<< HEAD
 void EXTI3_IRQHandler(void)
 { 
   if(EXTI_GetITStatus(EXTI_Line3) != RESET)
@@ -307,6 +288,8 @@ void EXTI3_IRQHandler(void)
     //EXTI_ClearITPendingBit(EXTI_Line3);   
   }   
 }
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 
 void EXTI9_5_IRQHandler(void)
 {  

@@ -155,6 +155,7 @@ bool PlatformInit(void)
   return true;
 }
 
+<<<<<<< HEAD
 void RTC_Configuration(void)
 {
   /* RTC clock source configuration ------------------------------------------*/
@@ -288,6 +289,8 @@ void EnterIntoStopMode(void)
 }
 
 
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 /**
  *  main - main application loop. Sets up platform and then performs simple
  *  transfers (simplex) while incrementing the sequence number for the lifetime 
@@ -377,12 +380,13 @@ int main(void)
     if(GetPubTxBufCount()>0x00)
     {
       PubTxDataProcess();
-    }   
-
+    }  
+    
     if (!ProtocolBusy())
     {
       // Increment the sequence number for the next transmission.
       gPacket.seqNum++;
+<<<<<<< HEAD
     } 
     
     if(GetPubTxBufCount()==0x00&&GetPubRxBufCount()==0x00&&GetUsartDmaTxSta()==IDLE)
@@ -394,8 +398,9 @@ int main(void)
       vRadio_StartRX(pRadioConfiguration->Radio_ChannelNumber);
       RadioGotoRxSta();
       SI4463_Enable_NIRQ_Int();
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
     }
-    
   }
   
 //  while (true)
@@ -421,7 +426,6 @@ int main(void)
 //    }
 //  }
 }
-
 
 /**
  *  GDO0Isr - GDO0 interrupt service routine. This service routine will always
@@ -458,4 +462,3 @@ void GDO0Isr(void)
 
 // Note: No hardware timer interrupt required for this example because the 
 // End Point node does not perform half duplex transfers.
-

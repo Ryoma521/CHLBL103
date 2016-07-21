@@ -359,9 +359,6 @@ void PubRxTxInit(void)
   pub_tx.BufCount=0;
 }
 
-
-
-
 void Uart_Init(void)
 {
   PubRxTxInit();
@@ -495,9 +492,12 @@ void USART_IDLE_IRQHandler(void)
         LumMod_Uart_DMA_Rx_Data();
         USART_ReceiveData( USART2 ); // Clear IDLE interrupt flag bit
     }
+<<<<<<< HEAD
     //USART_ClearFlag(USART2, USART_IT_IDLE);
     //USART_ClearFlag(USART2, USART_DMAReq_Tx);
     //USART_ClearFlag(USART2, USART_DMAReq_Rx);
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 }
 
 void LumMod_Uart_DMA_Rx_Data(void)
@@ -675,6 +675,7 @@ void CfgAndResp(void)
     CfgResp2PubTx(0x01);
   }     
 }
+<<<<<<< HEAD
 
 
 void USART2_Config(void)
@@ -778,3 +779,5 @@ void USART2_Config_After_Stop(void)//PA3
   NVIC_InitStructure.NVIC_IRQChannelCmd         = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 }
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version

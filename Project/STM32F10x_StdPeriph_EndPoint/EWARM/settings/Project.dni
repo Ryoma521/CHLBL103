@@ -9,7 +9,11 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
+<<<<<<< HEAD
 Checksum=450719552
+=======
+Checksum=419420588
+>>>>>>> parent of 302dcd7... E: Low Power Version
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -137,11 +141,16 @@ Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints2]
+<<<<<<< HEAD
 Bp0=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\UartApp\uartapp.c}.608.5" 0 0 1 "" 0 "" 0
 Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\SimplexTransfer\EndPoint\SimplexTransfer.c}.281.3" 0 0 1 "" 0 "" 0
 Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\UartApp\uartapp.c}.519.3" 0 0 1 "" 0 "" 0
 Bp3=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\stm32f10x_it.c}.303.7" 0 0 1 "" 0 "" 0
 Count=4
+=======
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\BL\DataLink\MAC\Frame.c}.262.5" 0 0 1 "" 0 "" 0
+Count=1
+>>>>>>> parent of 302dcd7... E: Low Power Version
 [Aliases]
 A0=_ "D:\Work\WorkSpace\STM32\STM32F1XX\STM32F10x_StdPeriph_Lib_V3.5.0\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_gpio.c" ""
 A1=_ "D:\Work\WorkSpace\STM32\STM32F1XX\STM32F10x_StdPeriph_Lib_V3.5.0\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.c" ""

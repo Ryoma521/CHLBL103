@@ -51,6 +51,7 @@ void Init_SI4463_Pin(void)
   
 }
 
+<<<<<<< HEAD
 void LowPower_SI4463_Pin(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct;
@@ -97,6 +98,8 @@ void LowPower_SI4463_Pin(void)
   //EXTILineNIRQ_Config();  
 }
 
+=======
+>>>>>>> parent of 302dcd7... E: Low Power Version
 void SI4463_SDN_UP(void)
 {
   GPIO_SetBits(PORT_SDN, PIN_SDN);
@@ -188,7 +191,7 @@ void SI4463_Enable_NIRQ_TX()
   GPIO_Init(PORT_NIRQ, &GPIO_InitStruct);
 }
 
-void SI4463_Enable_NIRQ_RX(void)
+void SI4463_Enable_NIRQ_RX()
 {
   GPIO_InitTypeDef GPIO_InitStruct;
   
